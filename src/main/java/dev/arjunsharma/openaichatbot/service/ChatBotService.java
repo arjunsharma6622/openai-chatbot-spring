@@ -4,7 +4,6 @@ import dev.arjunsharma.openaichatbot.dto.AnswerDTO;
 import dev.arjunsharma.openaichatbot.dto.OpenAiRequest;
 import dev.arjunsharma.openaichatbot.dto.OpenAiResponse;
 import dev.arjunsharma.openaichatbot.dto.RequestBodyMessage;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,14 +16,9 @@ import java.util.List;
 public class ChatBotService {
 
     final RestTemplate restTemplate;
-    private final String apiKey;
 
-    // please check if you have pasted your openai api key in application.properties file
-    // openai.api.key=Your_Openai_API_KEY - paste this in application.properties
-    // if this is not there then the openai requests won't work
-    public ChatBotService(RestTemplate restTemplate, @Value("${openai.api.key}") String apiKey) {
+    public ChatBotService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.apiKey = apiKey;
     }
 
     public AnswerDTO chatWithOpenAiService(String question){
@@ -37,11 +31,12 @@ public class ChatBotService {
         openAiRequestBody.setModel("gpt-4o");
         openAiRequestBody.setMessages(messages);
 
-
         // adding the headers data
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
-        headers.set("Authorization", "Bearer " + apiKey);
+
+        // here add your openai api key, if this is not there then the openai requests won't work
+        headers.set("Authorization", "Bearer " + "Your_Openai_API_KEY");
 
         // create HTTPEntity
         HttpEntity<OpenAiRequest> req = new HttpEntity<>(openAiRequestBody, headers);
